@@ -1,5 +1,6 @@
 .vactime{
     background-color: #fff;
+    max-width:600px;
 }
 /***************************日历样式start**************************************/
 .calendar .cal_title table{
