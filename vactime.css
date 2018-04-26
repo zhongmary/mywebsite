@@ -76,7 +76,6 @@
 }
 .time_detail,.submit_btn{
     padding:10px 0px;
-    background-color: #efefef;
 }
 .time_detail>div{
     line-height: 30px;
@@ -99,6 +98,7 @@
     text-align: center;
 }
 .submit_btn a{
+    text-decoration: none;
     display: inline-block;
     width:30%;
     height:40px;

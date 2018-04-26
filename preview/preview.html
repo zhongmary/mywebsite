@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>附件预览</title>
+    <link href="preview.css" rel="stylesheet">
+    <script src="jquery-1.12.2.min.js"></script>
+    <script src="preview.js"></script>
+    <style>
+        p.preBtn{
+            width:100px;
+            height:30px;
+            border:1px solid #999;
+            line-height: 30px;
+            color:#999;
+            text-align: center;
+            cursor: pointer;
+            background-color: #eee;
+            margin:100px auto;
+        }
+        p.preBtn input{
+            width:100px;
+            height:30px;
+        }
+        div.imgShow img{
+            width:200px;
+            height:200px;
+        }
+    </style>
+    <script>
+        $(function(){
+            var imgData={};
+            $('.imgSrc').on('change',function(e){
+                var  file=$(this)[0].files[0];
+                var fileName = file.name;
+                var reader=new FileReader();
+                var imgstr='<img name="'+fileName+'"';
+                reader.readAsDataURL(file);
+                reader.onload=function(e){
+                    $(".imgShow").append(imgstr+'src="'+this.result+'">');
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+<p class="preBtn">附件预览</p>
+<input type="file" value="上传图片" class="imgSrc">
+<div class="imgShow"></div>
+<div class="imgPreview">
+    <div class="preClose"><p>X</p></div>
+    <div class="imgBox">
+        <div class="turn turnLeft"></div>
+        <div class="turn turnRight"></div>
+    </div>
+    <div class="imgCtr">
+        <div class="minImg">
+            <div class="turn turnLeft"></div>
+            <div class="turn turnRight"></div>
+            <div class="minImgBox">
+
+            </div>
+        </div>
+        <div><img src="img/preRotate.png" class="preRotate"></div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+*{
+    margin:0;
+    padding:0;
+}
+html,body{width:100%;height:100%;}
+.imgPreview{
+   width:45%;
+    height: 90%;
+    position: fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform:translate(-50%,-50%) ;
+    -moz-transform:translate(-50%,-50%) ;
+    -ms-transform:translate(-50%,-50%) ;
+    z-index: 30;
+    display: none;
+}
+.imgPreview .preClose{
+    width:30px;
+    height:30px;
+    border-radius: 15px;
+    background-color: #777;
+    text-align: center;
+    line-height: 26px;
+    position: absolute;
+    right:-10px;
+    top:-10px;
+    cursor: pointer;
+    border:2px solid #fff;
+    box-sizing: border-box;
+    z-index: 140;
+}
+.imgPreview .preClose P{
+    color:#fff;
+    font-size: 15px;
+}
+.imgPreview .imgBox{
+    background-color: #000;
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+    width:100%;
+    height: 100%;
+}
+.imgPreview .imgBox img{
+max-width: 100%;
+   max-height:100%;
+}
+.imgPreview .turn{
+    height:50px;
+    width:20px;
+    position: absolute;
+    top:50%;
+    transform:translateY(-50%);
+    -webkit-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    display: none;
+    color:#fff;
+    cursor: pointer;
+    background-color: #000;
+    opacity: 0.5;
+    z-index: 140;
+
+}
+.imgPreview:hover .turn{
+    display: block;
+}
+.imgPreview .turn:hover{
+    opacity: 1;
+}
+.imgPreview .turnLeft{
+  left: 10px;
+    background: url("img/preLeft.png") no-repeat center center;
+    background-size: contain;
+}
+.imgPreview .turnRight{
+    right:10px;
+    background: url("img/preRight.png") no-repeat center center;
+    background-size: contain;
+}
+.imgPreview .imgCtr{
+    height:80px;
+    background-color: #000;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+.imgPreview .imgCtr .minImg{
+    max-width:60%;
+    display: inline-block;
+    padding:10px 50px;
+    position: relative;
+}
+.imgPreview .imgCtr .minImgBox{
+    width:100%;
+    text-align: center;
+    overflow: hidden;
+    height: 60px;
+    position: relative;
+
+}
+.imgPreview .imgCtr ul{
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    height:60px;
+    position: relative;
+    left:0px;
+}
+.imgPreview .imgCtr ul li{
+  list-style: none;
+    display: inline-block;
+    width:60px;
+    height:60px;
+    border-right:5px solid #000;
+}
+.imgPreview .imgCtr ul li:first-child{
+    border-left:5px solid #000;
+}
+.imgPreview .imgCtr ul li a{
+    display: inline-block;
+    width: 100%;
+    height:60px;
+    background-color: #fff;
+}
+.imgPreview .imgCtr .minImg .turn{
+    width:20px;
+    height:25px;
+    display: block;
+}
+
+.imgPreview .imgCtr .minImg ul img{
+    width:60px;
+    height:60px;
+}
+.imgPreview .preRotate{
+    position: absolute;
+    right:10px;
+    bottom:10px;
+    width:20px;
+    cursor: pointer;
+}

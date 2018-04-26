@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="apple-mobile-web-app-title" content="select-demo">
+    <script src="jquery-1.8.3.min.js"></script>
+    <script src="bmplugin.js"></script>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .ml-select {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .ml-select .ml-persd {
+            height: 100%;
+        }
+
+        .ml-select .ml {
+            width: 100%;
+            background: #fff;
+            position: absolute;
+            bottom: 0px;
+            height: 0px;
+        }
+
+        .ml-select .mlc-hidden {
+            visibility: hidden;
+            height: 0px !important;
+        }
+
+        .ml-select .mlh-c {
+            position: relative;
+            border-bottom: 1px solid #efefef;
+        }
+
+        .ml-select .mlh-label {
+            box-sizing: border-box;
+            padding: 0px 80px;
+            height: 45px;
+        }
+
+        .ml-select .mlh-c a.ml-btn {
+            text-decoration: none;
+            position: absolute;
+            width: 80px;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .ml-select .mlh-c a.ml-btn:first-child {
+            color: #555;
+        }
+
+        .ml-select .mlh-c a.ml-btn:last-child {
+            color: #ff7214;
+        }
+
+        .ml-select .mlh-label ~ a.ml-btn {
+            right: 0px;
+            top: 0px;
+        }
+
+        .ml-select .mlc {
+            position: relative;
+            text-align: center;
+        }
+
+        .ml-select .mlc-item {
+            height: 180px;
+            overflow: scroll;
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            padding: 0px 20px 0px 0px;
+            margin: 0px 5px;
+        }
+
+        .ml-select .mlc-item .label {
+            position: absolute;
+            right: 0px;
+            font-size: 18px;
+        }
+
+        .ml-select .mlc-ul {
+            transition-timing-function: ease-in-out;
+        }
+
+        .ml-select .mlc-item-select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0px;
+        }
+
+        .ml-select .mlc-li {
+            font-size: 20px;
+            text-align: center;
+            transition-timing-function: ease-in-out;
+        }
+
+        .ml-select .mlc-li[ml-selected="false"] {
+            color: #9f9f9f;
+        }
+
+        .ml-select .mlc-li[ml-selected="true"] {
+            opacity: 1;
+            font-size: 21px;
+        }
+
+        .ml-select .mlc-so {
+            width: 100%;
+            border-top: 1px solid #efefef;
+            border-bottom: 1px solid #efefef;
+            position: absolute;
+            z-index: 1;
+        }
+
+        #year-ul .mlc-li {
+            min-width: 48px;
+        }
+
+        .item-input {
+            text-align: center;
+        }
+
+        .label-switch {
+            display: inline-block;
+            vertical-align: middle;
+            width: 52px;
+            border-radius: 16px;
+            box-sizing: border-box;
+            height: 32px;
+            position: relative;
+            cursor: pointer;
+            -ms-flex-item-align: center;
+            -webkit-align-self: center;
+            align-self: center;
+        }
+
+        .label-switch input[type="checkbox"] {
+            display: none;
+        }
+
+        .label-switch .checkbox {
+            width: 52px;
+            border-radius: 16px;
+            box-sizing: border-box;
+            height: 32px;
+            background: #e5e5e5;
+            z-index: 0;
+            margin: 0;
+            padding: 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            -webkit-transition-duration: 300ms;
+            transition-duration: 300ms;
+        }
+
+        .label-switch .checkbox:before {
+            content: ' ';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 48px;
+            border-radius: 16px;
+            box-sizing: border-box;
+            height: 28px;
+            background: #fff;
+            z-index: 1;
+            -webkit-transition-duration: 300ms;
+            transition-duration: 300ms;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+
+        .label-switch .checkbox:after {
+            content: ' ';
+            height: 28px;
+            width: 28px;
+            border-radius: 28px;
+            background: #fff;
+            position: absolute;
+            z-index: 2;
+            top: 2px;
+            left: 2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+            -webkit-transition-duration: 300ms;
+            transition-duration: 300ms;
+        }
+
+        .label-switch input[type="checkbox"]:checked + .checkbox {
+            background: #4cd964;
+        }
+
+        .label-switch input[type="checkbox"]:checked + .checkbox:after {
+            transform: translateX(22px);
+        }
+
+        .label-switch input[type="checkbox"]:checked + .checkbox:before {
+            transform: scale(0);
+        }
+    </style>
+    <script>
+        $(function () {
+            var selData0 = [
+                '{"id":"ss","data":[{"value":"01","opt":"病假"},{"value":"02","opt":"事假"},{"value":"03","opt":"休假"},{"value":"04","opt":"丧假"}]}'
+
+            ];
+            $.bmselect({
+                seldata: selData0,
+                id: 'sel0',
+                type: 'select',
+                defaultVal: ''
+            });
+            var now = new Date();
+            var selData = {
+                "dateWheels": " hh ss",
+                "format": " hh:ss"
+            };
+            $.bmselect({
+                seldata: selData,
+                id: 'sel',
+                type: 'datetime',
+                defaultVal: ''
+            });
+            var selData1 = {//只允许设置同年最大最小值
+//                    "minDate": new Date(2017, 8, 8),
+//                    "maxDate": new Date(2017, 8, 9),
+//                    "minDate": "2017-07-9",
+//                    "maxDate": "2017-07-13",
+                "dateWheels": " mm dd DD hh ss",
+                "format": "yyyy-mm-dd hh:ss"
+            };
+            $.bmselect({
+                seldata: selData1,
+                id: 'sel1',
+                type: 'datetime',
+                defaultVal: ''
+            });
+            var selData2 = {
+                "minDate": '2010-09-8', //目前最大最小值只能设置到年月日
+                "maxDate": '2018-03-09',
+                "dateWheels": "yy mm dd  hh ss",
+                "format": "yyyy-mm-dd hh:ss"
+            };
+            $.bmselect({
+                seldata: selData2,
+                id: 'sel2',
+                type: 'datetime',
+                defaultVal: '2017,07-06,12,55'
+            });
+            var selData3 = {
+//                    "minDate": 'now',
+                "minDate": '2017-2-5',
+                "maxDate": '2018-09-8',
+                "dateWheels": "yy mm dd",
+                "format": "yyyy-mm-dd"
+            };
+            $.bmselect({
+                seldata: selData3,
+                id: 'sel3',
+                type: 'datetime',
+                defaultVal: ''
+            });
+        });
+        /*
+         * 下拉选择弹框bmselect
+         * 参数
+         *  seldata:对象数组
+         *  type:类型 【select/ datetime】
+         *  id:点击对象的id值
+         * 事件
+         *
+         */
+        (function ($, window, document) {
+            var _bmselect = function (option) {
+                //当前dom对象
+                var $this = $("#ml"), plugin = this;
+                //默认参数
+                plugin._default = {
+                    selclass: 'bmselect',
+                    step: 40,
+                    type: '',
+                    selholder: '',
+                    defaultVal: '',
+                    zIndex: 1000,
+                    surebtntext: '确定',
+                    cancelbtntext: '取消',
+                    onBeforeSure: null,
+                    onSure: null,
+                    onCancel: null,
+                    //date参数
+                    "dateWheels": "yy mm dd DD hh ss",
+                    yeartext: '年',
+                    monthtext: '月',
+                    daytext: '日',
+                    weektext: '周',
+                    hourtext: '时',
+                    secondtext: '分',
+                    loopitem: ['month', 'date', 'hour', 'second']
+
+
+                };
+                //参数
+                plugin._options = $.extend(true, {}, plugin._default, typeof option === "object" ? option : {});
+                /**
+                 *插件参数
+                 */
+                plugin._thisattr = {
+                    /**
+                     * id
+                     */
+                    "id": "",
+                    /**
+                     * 初始化参数
+                     */
+                    init: function () {
+                        this.id = $this.attr('id');
+                    }
+                };
+                /**
+                 *事件
+                 */
+                plugin._event = {
+                    /**
+                     * 显示选择框
+                     */
+                    show: function () {
+                        $(".ml-select").show();
+                        $(".ml-select .ml").animate({'height': '245px'}, 'fast', 'linear');
+                    },
+                    /**
+                     * 关闭选择框
+                     */
+                    close: function () {
+                        $(".ml-select").hide();
+                        $(".ml-select .ml").animate({'height': '0px'}, 'fast', 'linear');
+                        $(".ml-select").remove();
+                    },
+                    getTranslate: function (id) {
+                        if (typeof id != "undefined") {
+                            var translates = document.defaultView.getComputedStyle(document.getElementById(id + "-ul"), null).transform.substring(7).split(',');
+                            return parseFloat(translates[5]);
+                        }
+                    },
+                    /**
+                     * 获取触摸对象id
+                     */
+                    getHandler: function (ev) {
+                        return $(ev.target).closest('.mlc-item').attr('id'); // 当鼠标移出Div1时，会弹出提示框提示鼠标移动到的另一个元素的ID
+                    },
+                    /*循环位置判断*/
+                    loopChange: function (id) {
+                        //排除mm月dd日类型
+                        if (id == "month" && !$("#year").length) {
+                            return;
+                        }
+                        if ($("#" + id).length && plugin._options['loopitem'].indexOf(id) != -1) {
+                            var step = plugin._options['step'];
+                            var h = $("#" + id + ' .mlc-ul-i').height();
+                            var movey = plugin._event.getTranslate(id);
+                            //上滚
+                            if (movey <= 2 * step && movey >= 0) {
+                                var i = 2 - movey / step;
+                                var y = movey - h;
+                                $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                $("#" + id).find('.mlc-li').attr('ml-selected', 'false');
+                                $($("#" + id).find('.mlc-ul-i').eq(1)).find('.mlc-li').eq(i).attr('ml-selected', 'true');
+                            }
+                            //下滚
+                            if (-movey >= h && movey < 0) {
+                                if (Math.abs(movey) - h == 0) {
+                                    var i = 2;
+                                } else {
+                                    var i = (Math.abs(movey) - h) / step + 2;
+                                }
+                                var y = movey + h;
+                                $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                $("#" + id).find('.mlc-li').attr('ml-selected', 'false');
+                                $($("#" + id).find('.mlc-ul-i').eq(0)).find('.mlc-li').eq(i).attr('ml-selected', 'true');
+                            }
+                        }
+
+                    }
+                };
+                /**
+                 * 日期
+                 */
+
+                plugin._datetime = {
+                    getParam: function (dateobj) {
+                        //定义当前日期 y:年 m:月 d:日  fw:所属星期 per_month_days:每月天数
+                        var y = dateobj.getFullYear(),
+                            m = dateobj.getMonth(),
+                            d = dateobj.getDate(),
+                            fw = dateobj.getDay()
+
+                    },
+                    //根据年月返回每月天数
+                    getDays: function (y, m) {
+                        var per_month_days = new Array(31, 28 + plugin._datetime.isLeap(y), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+                        return per_month_days[m];
+                    },
+                    //根据年月日返回星期数
+                    getWeek: function (y, m, d) {
+                        var weekstr = ['日', '一', '二', '三', '四', '五', '六'];
+                        return weekstr[new Date(y, m, d).getDay()];
+                    },
+                    //无年份(格式xx月xx日)选择动态滚动
+                    loadmdStr: function (val) {//val 为年份
+                        var initVal = val;
+                        //最大最小值处理
+                        var data = plugin._options['seldata'];
+                        var minm = 1, mind = 1, maxm = 12, maxd = 31;
+                        if ($.trim(data.minDate).length && plugin._datetime.getDateType(data.minDate).getFullYear() == new Date().getFullYear()) {
+                            var min_date = plugin._datetime.getDateType(data.minDate);
+                            minm = min_date.getMonth() + 1;
+                            mind = min_date.getDate();
+                        }
+                        if ($.trim(data.maxDate).length && plugin._datetime.getDateType(data.maxDate).getFullYear() == new Date().getFullYear()) {
+                            var max_date = plugin._datetime.getDateType(data.maxDate);
+                            maxm = max_date.getMonth() + 1;
+                            maxd = max_date.getDate();
+                        }
+
+                        if (!$("#" + val).length) {
+                            var data = plugin._options['seldata'];
+                            var selbd = '<div class="year-item" id="' + initVal + '" pre-data="' + initVal + '">';
+                            for (var i = minm; i <= maxm; i++) {
+                                selbd += '<div class="mlc-ul-i">';
+                                for (var j = 1; j <= plugin._datetime.getDays(initVal, i - 1); j++) {
+                                    if ((i == minm && j < mind) || (i == maxm && j > maxd)) {
+                                        continue;
+                                    }
+                                    var md = '', md_val = initVal + '-';
+                                    data.dateWheels.indexOf('mm') != -1 ? (md += (i < 10 ? '0' + i : i) + plugin._options['monthtext']) : md;
+                                    data.dateWheels.indexOf('dd') != -1 ? (md += (j < 10 ? '0' + j : j) + plugin._options['daytext']) : md;
+                                    data.dateWheels.indexOf('DD') != -1 ? (md += plugin._options['weektext'] + plugin._datetime.getWeek(initVal, i - 1, j)) : md;
+                                    data.dateWheels.indexOf('mm') != -1 ? data.dateWheels.indexOf('dd') != -1 ? (md_val += (i < 10 ? '0' + i : i) + '-' + (j < 10 ? '0' + j : j)) : (md_val += (j < 10 ? '0' + j : j)) : (md_val += (i < 10 ? '0' + i : i));
+                                    selbd += '<div role="option" class="mlc-li" style="line-height:' + plugin._options['step'] + 'px" ml-selected="false" data-val="' + md_val + '"><div class="mlc-i">' + md + '</div></div>';
+                                }
+                                selbd += '</div>';
+                            }
+                            selbd += '</div>';
+                            return selbd;
+                        } else {
+                            return false;
+                        }
+
+                    },
+                    refreshMd: function () {
+                        //判断是否需要继续加载 格式xx月xx日
+                        var data = plugin._options['seldata'];
+                        if (!$("#year").length && $("#month").length && !$("#date").length) {
+                            if ($("#month").attr('data-val').split('-').length == 3) {
+                                //当值为11月份时加载下一年
+                                var md = $("#month").attr('data-val').split('-');
+                                if (!$.trim(data.maxDate).length) {
+                                    if (parseInt(md[1]) >= 11) {
+                                        if (plugin._datetime.loadmdStr(parseInt(md[0]) - 1) != false) {
+                                            $("#month-ul").append(plugin._datetime.loadmdStr(parseInt(md[0]) + 1));
+                                        }
+                                    }
+                                }
+                                if (!$.trim(data.minDate).length) {
+                                    if (parseInt(md[1]) <= 2) {
+                                        plugin._datetime.loadmdStr(parseInt(md[0]) - 1);
+                                        if (plugin._datetime.loadmdStr(parseInt(md[0]) - 1) != false) {
+                                            $("#month-ul").find(".year-item").eq(0).before(plugin._datetime.loadmdStr(parseInt(md[0]) - 1));
+                                            var y = plugin._event.getTranslate("month") - $("#" + (parseInt(md[0]) - 1)).height();
+                                            $("#month-ul").css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+
+                    },
+                    //根据选择的年月更新日期天数
+                    refreshDays: function () {
+                        if ($("#year").length && $("#month").length && $("#date").length) {
+                            var y = $("#year").attr('data-val');
+                            var m = $("#month").attr('data-val');
+                            var d = $("#date").attr('data-val');
+                            var days = plugin._datetime.getDays(y, parseInt(m) - 1);
+                            $("#date-ul .mlc-li").removeClass('mlc-hidden');
+                            $.each($("#date-ul .mlc-ul-i"), function (i) {
+                                for (var i = days; i < 31; i++) {
+                                    $(this).find('.mlc-li').eq(i).addClass('mlc-hidden');
+                                }
+                            });
+
+                            if (plugin._options['loopitem'].indexOf('date') != -1) {
+                                var dis = plugin._event.getTranslate("date");
+                                $(".mlc-hidden").each(function (i) {
+                                    if ($(this).attr('ml-selected') == "true") {
+                                        var y = dis + (i + 1) * plugin._options['step'];
+                                        $("#date-ul").css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                        $("#date-ul .mlc-li").attr("ml-selected", "false");
+                                        $("#date-ul .mlc-li").eq(days - 1).attr("ml-selected", "true");
+                                    }
+                                });
+
+                            } else {
+                                var dis = $("#date-ul").height() - plugin._options['step'] * 3;
+                                if (dis <= -plugin._event.getTranslate("date")) {
+                                    $("#date-ul").css({'-webkit-transform': 'translate(0px,-' + dis + 'px)'});
+                                    $("#date-ul .mlc-li").attr("ml-selected", "false");
+                                    $("#date-ul .mlc-li").eq((dis / plugin._options['step']) + 2).attr("ml-selected", "true");
+                                    $("#date").attr('data-val', $("#date-ul .mlc-li").eq((dis / plugin._options['step']) + 2).attr('data-val'));
+                                }
+                            }
+                        }
+                    },
+                    createDateDom: function () {//创建dom结构
+                        //初始化值
+                        var initVal;
+                        if (!$.trim($("#" + plugin._options['id']).attr('data-val')).length) {
+                            if ($.trim(plugin._options['defaultVal']).length) {
+                                initVal = new Date(plugin._options['defaultVal']);
+                            } else {
+                                initVal = new Date();
+                            }
+
+                        } else {
+                            var selVal = $("#" + plugin._options['id']).attr('data-val').split(',');
+                            var y = selVal[0], m = parseInt(selVal[1].split('-')[0]) - 1, d = selVal[1].split('-')[1],
+                                h = selVal[2], s = selVal[3];
+                            initVal = new Date(y, m, d, h, s);
+                        }
+                        var data = plugin._options['seldata'];
+                        var miny = 0, maxy = 0;
+                        if (data.dateWheels.indexOf('yy') != -1) {
+                            if ($.trim(data.minDate) != '' && $.trim(data.maxDate) != '') {
+                                miny = plugin._datetime.getDateType(data.minDate).getFullYear();
+                                maxy = plugin._datetime.getDateType(data.maxDate).getFullYear();
+                            } else if ($.trim(data.minDate) == '' && $.trim(data.maxDate) != '') {
+                                miny = new Date().getFullYear();
+                                maxy = plugin._datetime.getDateType(data.maxDate).getFullYear();
+                            } else if ($.trim(data.minDate) == '' && $.trim(data.maxDate) == '') {
+                                miny = 0;
+                                maxy = 0;
+                            }
+                            if (miny != 0 && maxy != 0) {
+                                var selbd = ' <div class="mlc-item mlc-item-year"  id="year"><div class="label">' + plugin._options['yeartext'] + '</div><div class="mlc-ul" id="year-ul"><div class="mlc-ul-i">';
+                                for (var i = 0; i <= (maxy - miny); i++) {
+                                    selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (miny + i) + '"><div class="mlc-i">' + (miny + i) + '</div></div>';
+                                }
+                                selbd += '</div></div></div>';
+                                $('.mlc').append(selbd);
+                            } else {
+                                var selbd = ' <div class="mlc-item mlc-item-year"  id="year"><div class="label">' + plugin._options['yeartext'] + '</div><div class="mlc-ul" id="year-ul"><div class="mlc-ul-i">';
+                                for (var i = 0; i <= 1; i++) {
+                                    selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (new Date().getFullYear() + i) + '"><div class="mlc-i">' + (new Date().getFullYear() + i) + '</div></div>';
+                                }
+                                selbd += '</div></div></div>';
+                                $('.mlc').append(selbd);
+                            }
+                            if (data.dateWheels.indexOf('mm') != -1) {
+                                var selbd = ' <div class="mlc-item mlc-item-month"  id="month"><div class="label">' + plugin._options['monthtext'] + '</div><div class="mlc-ul" id="month-ul"><div class="mlc-ul-i">';
+                                for (var i = 1; i <= 12; i++) {
+                                    selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (i < 10 ? '0' + i : i) + '"><div class="mlc-i">' + (i < 10 ? '0' + i : i) + '</div></div>';
+                                }
+                                selbd += '</div></div></div>';
+                                $('.mlc').append(selbd);
+                                if (plugin._options['loopitem'].indexOf('month') != -1) {
+                                    $("#month-ul").append($('#month-ul').html());
+                                }
+                                ;
+                            }
+                            if (data.dateWheels.indexOf('dd') != -1 || data.dateWheels.indexOf('DD') != -1) {
+                                var selbd = ' <div class="mlc-item mlc-item-date"  id="date"><div class="label">' + plugin._options['daytext'] + '</div><div class="mlc-ul" id="date-ul"><div class="mlc-ul-i">';
+                                for (var i = 1; i <= 31; i++) {
+                                    selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (i < 10 ? '0' + i : i) + '"><div class="mlc-i">' + (i < 10 ? '0' + i : i) + '<span class="mlc-week"></span></div></div>';
+                                }
+                                selbd += '</div></div></div>';
+                                $('.mlc').append(selbd);
+                                if (plugin._options['loopitem'].indexOf('date') != -1) {
+                                    $("#date-ul").append($('#date-ul').html());
+                                }
+                                ;
+
+                            }
+
+
+                        } else {
+
+                            if (data.dateWheels.indexOf('mm') != -1 && data.dateWheels.indexOf('dd') != -1 || data.dateWheels.indexOf('DD') != -1) {
+                                var selbd = ' <div class="mlc-item mlc-item-month"  id="month"><div class="mlc-ul" id="month-ul">';
+                                selbd += plugin._datetime.loadmdStr(initVal.getFullYear());
+                                selbd += '</div>';
+                                $('.mlc').append(selbd);
+                            }
+
+                        }
+                        if (data.dateWheels.indexOf('hh') != -1) {
+                            var selbd = ' <div class="mlc-item mlc-item-hour"  id="hour"><div class="label">' + plugin._options['hourtext'] + '</div><div class="mlc-ul" id="hour-ul"><div class="mlc-ul-i">';
+                            for (var i = 0; i <= 23; i++) {
+                                selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (i < 10 ? '0' + i : i) + '"><div class="mlc-i">' + (i < 10 ? '0' + i : i) + '</div></div>';
+                            }
+                            selbd += '</div></div></div>';
+                            $('.mlc').append(selbd);
+                            if (plugin._options['loopitem'].indexOf('hour') != -1) {
+                                $("#hour-ul").append($('#hour-ul').html());
+                            }
+                            ;
+                        }
+                        if (data.dateWheels.indexOf('ss') != -1) {
+                            var selbd = ' <div class="mlc-item mlc-item-hour"  id="second"><div class="label">' + plugin._options['secondtext'] + '</div><div class="mlc-ul" id="second-ul"><div class="mlc-ul-i">';
+                            for (var i = 0; i <= 59; i++) {
+                                selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + (i < 10 ? '0' + i : i) + '"><div class="mlc-i">' + (i < 10 ? '0' + i : i) + '</div></div>';
+                            }
+                            selbd += '</div></div></div>';
+                            $('.mlc').append(selbd);
+                            if (plugin._options['loopitem'].indexOf('second') != -1) {
+                                $("#second-ul").append($('#second-ul').html());
+                            }
+                        }
+                    },
+                    //判断平年，闰年
+                    isLeap: function (y) {
+                        return y % 4 === 0 ? (y % 100 !== 0 ? 1 : (y % 400 === 0 ? 1 : 0)) : 0;
+                    },
+                    //根据yyyy-mm-dd格式返回date类型数据
+                    getDateType: function (date) {
+                        if (date == "now") {
+                            var date = new Date();
+                            return date;
+                        } else {
+                            var dateArr = date.split('-');
+                            var date = new Date(dateArr[0], parseInt(dateArr[1]) - 1, dateArr[2]);
+                            return date;
+                        }
+
+                    },
+                    //滚动过程最大最小值比较
+                    isMaxMin: function (cy, cm, cd) {
+                        var data = plugin._options['seldata'];
+                        if ($.trim(data.minDate).length) {
+                            if ($("#year").length && $("#month").length || $("#date").length) {
+                                if (new Date(cy, parseInt(cm) - 1, cd) <= plugin._datetime.getDateType(data.minDate)) {
+                                    return '01'; //低于最小值
+                                }
+                            }
+                        }
+                        if ($.trim(data.maxDate).length) {
+                            if ($("#year").length && $("#month").length || $("#date").length) {
+                                if (new Date(cy, parseInt(cm) - 1, cd) >= plugin._datetime.getDateType(data.maxDate)) {
+                                    return '02'; //超过最大值
+                                }
+                            }
+                        }
+                        return false;
+                    }
+                };
+                //插件渲染
+                plugin._render = {
+                    //创建选择框的html对象
+                    createDom: function () {
+                        $('.ml-select').remove();
+                        if ($('.ml-select').length == 0) {
+                            var mlcStr = $('<div class="ml-select" id="ml"><div class="ml-persd">' +
+                                '<div class="ml" role="dialog" id="ml-box"><div class="mlh">' +
+                                '<div class="mlh-c"><a btntype="mlh-cancel" class="ml-btn" href="javascript:void(0)">' + plugin._options['cancelbtntext'] + '</a>' +
+                                '<div class="mlh-label">' + plugin._options['selholder'] + '</div><a btntype="mlh-sure" class="ml-btn" href="javascript:void(0)">' + plugin._options['surebtntext'] + '</a></div> </div>' +
+                                '<div class="mlc" id="mlc"><div class="mlc-so"></div>' +
+                                '</div></div></div></div>');
+                            $('body').append(mlcStr);
+                            //加载数据
+                            if (plugin._options['type'] == "select") {
+                                var selData = plugin._options['seldata'];
+                                for (var i = 0; i < selData.length; i++) {
+                                    var dataobj = $.parseJSON(selData[i]);
+                                    var selbd = ' <div class="mlc-item mlc-item-select"  id="' + dataobj.id + '"><div class="mlc-ul" id="' + dataobj.id + '-ul"><div class="mlc-ul-i">';
+                                    for (var j = 0; j < dataobj.data.length; j++) {
+                                        selbd += '<div role="option" class="mlc-li" ml-selected="false" data-val="' + dataobj.data[j].value + '"><div class="mlc-i">' + dataobj.data[j].opt + '</div></div>';
+                                    }
+                                    selbd += '</div></div></div>';
+                                    $('.mlc').append(selbd);
+                                }
+                            }
+                            if (plugin._options['type'] == "datetime") {
+                                plugin._datetime.createDateDom();
+                            }
+                            plugin._render.initStyle();
+                        }
+                    },
+                    initStyle: function () {
+                        var step = plugin._options['step'];
+                        $(".ml-select .mlc-li").css({
+                            'heigth': step + 'px',
+                            'line-height': step + 'px'
+                        });
+                        $(" .ml-select .mlc-so").css({
+                            'height': step + 'px',
+                            'top': 2 * step + 'px'
+                        });
+                        $(".ml-select .mlc-item .label").css({
+                            'top': 2 * step + 'px',
+                            'heigth': step + 'px',
+                            'line-height': step + 'px'
+                        });
+                        $(".ml-select").css({
+                            'z-index': plugin._options['zIndex']
+                        });
+                        //滚动宽度处理
+                        if ($("#hour").length && $("#second").length && !$("#month").length && !$("#date").length) {
+                            $("#hour").css({"padding-left": "30%"});
+                            $("#second").css({"padding-right": "30%"});
+                            $("#second .label").css({'right': 'auto', "left": "26px"})
+                        }
+                        if (!$("#hour").length && !$("#second").length && $("#year").length && $("#month").length && $("#date").length) {
+                            $(".mlc-item").eq(0).css({"padding-left": "30px"});
+                            $(".mlc-item").eq(1).css({"padding": "0px 20px"});
+                            $(".mlc-item").eq(2).css({"padding": "0px 50px 0px 20px"});
+                            $(".mlc-item").eq(2).find(".label").css({"right": "auto", "left": "46px"});
+                        }
+                    },
+                    /**
+                     * 绑定事件
+                     */
+                    bindevent: function () {
+                        $("#" + plugin._options['id']).off('click').on('click', function () {
+                            plugin._render.run();
+                            plugin._render.touchScroll();
+                            plugin._render.mouseScroll();
+                            if (!$.trim($("#" + plugin._options['id']).attr('data-val')).length) {
+                                plugin._render.initOpt(plugin._options['defaultVal']);
+                            } else {
+                                plugin._render.initOpt($.trim($("#" + plugin._options['id']).attr('data-val')));
+                            }
+                            plugin._event.show();
+                            //循环初始化
+                            if (plugin._options['loopitem'].length) {
+                                $.each(plugin._options['loopitem'], function (i) {
+                                    plugin._event.loopChange(plugin._options['loopitem'][i]);
+                                });
+                            }
+
+                        });
+                        //选择框关闭响应
+                        $('.ml-select').off('click').on('click', function (e) {
+                            var e = e || window.event; //浏览器兼容性
+                            var elem = e.target || e.srcElement;
+                            while (elem) { //循环判断至跟节点，防止点击的是div子元素
+                                if (elem.id && elem.id == 'ml-box') {
+                                    return;
+                                }
+                                elem = elem.parentNode;
+                            }
+                            plugin._event.close();
+                        });
+                        //取消、确定事件
+                        $('.mlh .ml-btn').off('click').on('click', function () {
+                            var bmtype = $(this).attr('btntype');
+                            switch (bmtype) {
+                                case 'mlh-sure':
+                                    //获取已选值
+                                    var selectedKey = [], selectedVal = [];
+                                    $(".mlc-li").each(function () {
+                                        if ($(this).attr('ml-selected') == "true") {
+                                            selectedKey.push($(this).attr('data-val'));
+                                            selectedVal.push($(this).find('.mlc-i').html());
+                                        }
+                                    });
+                                    if (plugin._options['type'] == "select") {
+                                        $("#" + plugin._options['id']).html(selectedVal.join(','));
+                                        $("#" + plugin._options['id']).attr("data-val", selectedKey.join(','));
+                                    }
+                                    if (plugin._options['type'] == "datetime") {
+                                        //判断显示格式
+                                        //plugin._options['format']
+                                        var y = '', m = '', d = '', D = '', h = '', s = '', datewheels = [];
+                                        if ($("#year").length) {
+                                            y = $("#year").attr('data-val');
+                                            datewheels.push(y);
+                                        }
+                                        if ($("#month").length) {
+                                            var md = $("#month").attr('data-val');
+                                            if (md.split('-').length == 3) {
+                                                md = md.split('-')[1] + '-' + md.split('-')[2];
+                                            }
+                                            if ($("#date").length) {
+                                                md += '-' + $("#date").attr('data-val');
+                                            }
+                                            datewheels.push(md);
+                                            m = md.substr(0, 2);
+                                            d = md.substr(3, 2);
+                                            if (plugin._options['seldata'].dateWheels.indexOf('DD') != -1) {
+                                                D = plugin._datetime.getWeek(y, parseInt(m) - 1, d);
+                                            }
+                                        } else {
+                                            datewheels.push('');
+                                        }
+                                        if ($("#hour").length) {
+                                            h = $("#hour").attr('data-val');
+                                            datewheels.push(h);
+                                        } else {
+                                            datewheels.push('');
+                                        }
+                                        if ($("#second").length) {
+                                            s = $("#second").attr('data-val');
+                                            datewheels.push(s);
+                                        } else {
+                                            datewheels.push('');
+                                        }
+                                        if ($("#year").length == 0) {
+                                            if ($("#month").length != 0) {
+                                                y = $("#month").attr('data-val').split('-')[0];
+                                            } else {
+                                                y = '';
+                                            }
+
+                                            datewheels.splice(0, 0, y);
+                                        }
+                                        var dateStr = plugin._options['seldata'].format.replace('yyyy', y).replace('mm', m).replace('dd', d).replace('DD', D).replace('hh', h).replace('ss', s);
+                                        $("#" + plugin._options['id']).html(dateStr);
+                                        $("#" + plugin._options['id']).attr("data-val", datewheels.join(','));
+                                    }
+                                    if (typeof plugin._options['onSure'] === 'function') {
+                                        plugin._options['onSure']();
+                                    }
+                                    plugin._event.close();
+                                    break;
+                                case 'mlh-cancel':
+                                    plugin._event.close();
+                                    if (typeof plugin._options['onCancel'] === 'function') {
+                                        plugin._options['onCancel']();
+                                    }
+                                    break;
+                            }
+                        });
+                    },
+                    //手势滚动事件
+                    touchScroll: function () {
+                        var step = plugin._options['step'];
+                        var id = '';
+                        //判断滑动手势
+                        var obj = document.getElementById('mlc');
+                        //滑动处理
+                        var startX, startY, i = 0, j = 0, h = 0;
+                        //比较大小参数
+                        var cy = "", cm = "", cd = "";
+                        obj.addEventListener('touchstart', function (ev) {
+                            $(".mlc-item").css('overflow', 'scroll');
+                            if ($("#year").length && $("#month").length || $("#date").length) {
+                                cy = $("#year").attr('data-val');
+                                cm = $("#month").attr('data-val');
+                                if ($("#date").length) {
+                                    cd = $("#date").attr('data-val');
+                                }
+                            }
+                            id = plugin._event.getHandler(ev);
+                            h = plugin._event.getTranslate(id);
+                            startX = ev.touches[0].pageX;
+                            startY = ev.touches[0].pageY;
+                        }, false);
+                        obj.addEventListener('touchmove', function (ev) {
+                            ev.preventDefault();
+                            var moveX = ev.touches[0].pageX;
+                            var moveY = ev.touches[0].pageY;
+                            var y = moveY - startY + h;
+                            $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                            $("#" + id).find('.mlc-li').attr('ml-selected', 'false');
+                            if (y > step * 2) {
+                                $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('ml-selected', 'false');
+                            } else {
+                                $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('ml-selected', 'true');
+                                if (id == "year") {
+                                    if (-y >= $("#year-ul").height() - 3 * step) {
+                                        cy = $("#" + id).find('.mlc-li').eq(Math.abs(Math.round($("#year-ul").height() / step) - 1)).attr('data-val');
+                                    } else {
+                                        cy = $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('data-val');
+                                    }
+                                }
+                                ;
+                                if (id == "month") {
+                                    cm = $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('data-val')
+                                }
+                                ;
+                                if (id == "date") {
+                                    cd = $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('data-val')
+                                }
+                            }
+                        }, false);
+                        obj.addEventListener('touchend', function (ev) {
+                            //判断是否为最大最小值
+                            if (plugin._datetime.isMaxMin(cy, cm, cd) == "01" || plugin._datetime.isMaxMin(cy, cm, cd) == "02") {
+                                if (plugin._datetime.isMaxMin(cy, cm, cd) == "01") {
+                                    var data = plugin._options['seldata'];
+                                    var min_date = plugin._datetime.getDateType(data.minDate);
+                                    var y = min_date.getFullYear(), m = min_date.getMonth() + 1, d = min_date.getDate(),
+                                        h = new Date().getHours(), s = new Date().getMinutes();
+                                    plugin._render.initOpt(y + ',' + m + '-' + d + ',' + h + ',' + s);
+                                }
+                                if (plugin._datetime.isMaxMin(cy, cm, cd) == "02") {
+                                    var data = plugin._options['seldata'];
+                                    var max_date = plugin._datetime.getDateType(data.maxDate);
+                                    var y = max_date.getFullYear(), m = max_date.getMonth() + 1, d = max_date.getDate(),
+                                        h = new Date().getHours(), s = new Date().getMinutes();
+                                    plugin._render.initOpt(y + ',' + m + '-' + d + ',' + h + ',' + s);
+                                }
+                            } else {
+                                var h = $('#' + id + '-ul').height();
+                                var y = Math.round(plugin._event.getTranslate(id) / step) * step;
+                                y = y > step * 2 ? step * 2 : y < -(h - step * 3) ? -(h - step * 3) : y;
+                                $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                $("#" + id).find('.mlc-li').attr('ml-selected', 'false');
+                                $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('ml-selected', 'true');
+                                $("#" + id).attr('data-val', $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(y / step) - 2)).attr('data-val'));
+                            }
+                            $("#" + id).off("touchstart");
+                            $("#" + id).off("touchmove");
+                            plugin._datetime.refreshMd();
+                            plugin._datetime.refreshDays();
+                            //循环初始化
+                            if (plugin._options['loopitem'].length) {
+                                $.each(plugin._options['loopitem'], function (i) {
+                                    plugin._event.loopChange(plugin._options['loopitem'][i]);
+                                });
+                            }
+                        }, false);
+                    },
+                    //初始化选择值 传入val
+                    initOpt: function (val) {
+                        var isExist = 0, valArr = [];
+                        if (plugin._options['type'] == "datetime") {
+                            if (!$.trim(val).length || typeof val == "undefined") {
+                                val = new Date();
+                            } else {
+                                val = val.split(',');
+                                if (val[0] != '' && val[1] != '') {
+                                    var m = parseInt(val[1].split('-')[0]) - 1;
+                                    var d = val[1].split('-')[1];
+                                    val = new Date(val[0], m, d, val[2], val[3]);
+                                } else {
+                                    val = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), val[2], val[3]);
+                                }
+
+                            }
+                            var md_val = '';
+                            var i = val.getMonth() + 1;
+                            var j = val.getDate();
+                            valArr.push(val.getFullYear());
+                            plugin._options['seldata'].dateWheels.indexOf('mm') != -1 ? plugin._options['seldata'].dateWheels.indexOf('dd') != -1 ? (md_val += (i < 10 ? '0' + i : i) + '-' + (j < 10 ? '0' + j : j)) : (md_val += (j < 10 ? '0' + j : j)) : (md_val += (i < 10 ? '0' + i : i));
+                            valArr.push(md_val);
+                            valArr.push(val.getHours() < 10 ? '0' + val.getHours() : val.getHours());
+                            valArr.push(val.getMinutes() < 10 ? '0' + val.getMinutes() : val.getMinutes());
+                            //初始化值
+                            $("#year").attr('data-val', valArr[0]);
+                            if ($("#month").length && $("#date").length) {
+                                $("#month").attr('data-val', valArr[1].split('-')[0]);
+                                $("#date").attr('data-val', valArr[1].split('-')[1]);
+                            } else {
+                                //无年份选择日期
+                                if (!$("#year").length && $("#month").length && !$("#date").length) {
+                                    $("#month").attr('data-val', valArr[0] + '-' + valArr[1]);
+                                } else {
+                                    $("#month").attr('data-val', valArr[1]);
+                                }
+                            }
+
+                            $("#hour").attr('data-val', valArr[2]);
+                            $("#second").attr('data-val', valArr[3]);
+                        }
+
+                        plugin._datetime.refreshMd();
+                        plugin._datetime.refreshDays();
+                        if (plugin._options['type'] == "select") {
+                            $("#" + $.parseJSON(plugin._options['seldata'][0]).id).attr("data-val", val);
+                            valArr.push(val);
+                        }
+                        $(".mlc-item").each(function (index) {
+                            $this = $(this);
+                            $this.find('.mlc-ul').css({'-webkit-transform': 'translate(0px,0px)'});
+                            $this.find('.mlc-li').attr('ml-selected', 'false');
+                            $this.find('.mlc-li').each(function (i) {
+                                if ($(this).attr('data-val') == $this.attr('data-val')) {
+                                    isExist = 1;
+                                    $(this).attr('ml-selected', 'true');
+                                    $this.find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + -plugin._options['step'] * (i - 2) + 'px)'});
+                                    return false;
+                                }
+                            });
+                            if (isExist == 0) {
+                                $this.find('.mlc-li').attr('ml-selected', 'false');
+                                $this.find('.mlc-li').eq(0).attr('ml-selected', 'true');
+                                $this.find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + plugin._options['step'] * 2 + 'px)'});
+                            }
+                        });
+                    },
+                    //鼠标滚动事件
+                    mouseScroll: function () {
+                        var scrollFunc = function (e) {
+                            $(".mlc-item").css('overflow', 'hidden');
+                            var id = plugin._event.getHandler(e);
+                            var moveY = 0;
+                            var h = $('#' + id + '-ul').height();
+                            e = e || window.event;
+                            var step = Math.abs(e.wheelDelta / 120) < 2 ? 2 : Math.abs(e.wheelDelta / 120);
+                            if (e.wheelDelta > 0 || e.detail > 0) {//IE/Opera/Chrome 正负120 Firefox 正负3
+                                var y = plugin._event.getTranslate(id) + plugin._options['step'] / 2 * step;
+                                y = y > plugin._options['step'] ? plugin._options['step'] * 2 : y;
+                                $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                moveY = y;
+                            } else {
+                                var y = plugin._event.getTranslate(id) - plugin._options['step'] / 2 * step;
+                                y = y < -(h - plugin._options['step'] * 3) ? -(h - plugin._options['step'] * 3) : y;
+                                $("#" + id).find('.mlc-ul').css({'-webkit-transform': 'translate(0px,' + y + 'px)'});
+                                moveY = y;
+                            }
+                            $("#" + id).find('.mlc-li').attr('ml-selected', 'false');
+                            $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(moveY / plugin._options['step']) - 2)).attr('ml-selected', 'true');
+                            $("#" + id).attr('data-val', $("#" + id).find('.mlc-li').eq(Math.abs(Math.round(moveY / plugin._options['step']) - 2)).attr('data-val'));
+                            plugin._datetime.refreshMd();
+                            plugin._datetime.refreshDays();
+                            //循环初始化
+                            if (plugin._options['loopitem'].length) {
+                                $.each(plugin._options['loopitem'], function (i) {
+                                    plugin._event.loopChange(plugin._options['loopitem'][i]);
+
+                                });
+                            }
+                        };
+                        //兼容性处理
+                        if (document.getElementById('mlc').addEventListener) {
+                            document.getElementById('mlc').addEventListener('DOMMouseScroll', scrollFunc, false);
+                        }//Firefox
+                        document.getElementById('mlc').onmousewheel = document.getElementById('mlc').onmousewheel = scrollFunc; //IE/Opera/Chrome/Safari
+
+                    },
+                    init: function () {
+                        plugin._render.createDom();
+                        //初始化参数
+                        plugin._thisattr.init();
+                        plugin._render.bindevent();
+                    },
+                    run: function () {
+                        this.init();
+                    }
+                }
+                ;
+            };
+            //插件暴露的方法
+            _bmselect.prototype = {
+                run: function () {
+                    this._render.run();
+                }
+            };
+            var bmselect = function (option) {
+                var bmselect = new _bmselect(option);
+                bmselect.run();
+            };
+            //将插件添加进jQuery中
+            $.bmselect = bmselect;
+        })(jQuery, window, document);
+    </script>
+</head>
+<body>
+<div id="sel0"
+     style="width:200px;height:40px;line-height: 40px;border:1px solid #ccc;outline: none;margin:20px 30px;text-indent: 1rem;font-size: 16px;"></div>
+<div id="sel"
+     style="width:200px;height:40px;line-height: 40px;border:1px solid #ccc;outline: none;margin:20px 30px;text-indent: 1rem;font-size: 16px;"></div>
+<div id="sel1"
+     style="width:200px;height:40px;line-height: 40px;border:1px solid #ccc;outline: none;margin:20px 30px;text-indent: 1rem;font-size: 16px;"></div>
+<div id="sel2"
+     style="width:200px;height:40px;line-height: 40px;border:1px solid #ccc;outline: none;margin:20px 30px;text-indent: 1rem;font-size: 16px;"></div>
+<div id="sel3"
+     style="width:200px;height:40px;line-height: 40px;border:1px solid #ccc;outline: none;margin:20px 30px;text-indent: 1rem;font-size: 16px;"></div>
+
+<div class="item-input">
+    <label class="label-switch">
+        <input type="checkbox">
+        <div class="checkbox"></div>
+    </label>
+</div>
+</body>
+</html>
