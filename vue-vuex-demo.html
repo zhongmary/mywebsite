@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>vue-vuex-demo</title>
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.js"></script>
+    <script src="https://cdn.bootcss.com/vuex/3.0.1/vuex.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #demo {
+            width: 260px;
+            margin: 0 auto;
+            border: 1px solid #efefef;
+            margin-top: 20px;
+        }
+
+        .result, .enter {
+            line-height: 45px;
+            height:45px;
+            text-align: right;
+            padding-right: 20px;
+            box-sizing: border-box;
+            color: #888;
+            background-color: #efefef;
+        }
+
+        .result {
+            color: #000;
+            font-size: 20px;
+        }
+
+        .list > div {
+            display: inline-block;
+            width: 65px;
+            line-height: 65px;
+            text-align: center;
+            box-sizing: border-box;
+            border-right: 1px solid #efefef;
+            border-top: 1px solid #efefef;
+            -webkit-tap-highlight-color: rgba(100, 100, 100, 0.2);
+            font-size: 20px;
+        }
+
+        .list > div:first-child {
+            color: #ff6000;
+        }
+
+        .list > div:nth-child(4n) {
+            border-right: none;
+        }
+
+        .list > div:last-child {
+            color: #fff;
+            background-color: #ff6000;
+        }
+    </style>
+</head>
+<body>
+<div id="demo">
+    <div class="result">
+        <!--绑定计算属性result-->
+        {{result}}
+    </div>
+    <div class="enter">
+        <!--绑定计算属性enter-->
+        {{enter===""?0:enter}}
+    </div>
+    <div class="key">
+        <div class="list">
+            <!--键盘区域-->
+            <keyboard v-for="item in keys" :value="item"></keyboard>
+        </div>
+    </div>
+</div>
+<a href="preview/preview.html" style="display:block;text-align: right;margin-top:20px">图片预览demo</a>
+
+</body>
+<script>
+    //创建一个store
+    const store = new Vuex.Store({
+        //state 存储应用层状态
+        state: {
+            result: "",//运算结果
+            enter: ""
+        },
+            //更改store状态的唯一途径
+            mutations:{
+                calculate(state,value){
+                    if(value==='='){
+                        state.result=eval(state.enter);
+                        state.enter+=value;
+                    }else if(value==='clear'){
+                        state.result=state.enter='';
+                    }else{
+                        state.enter+=value;
+                    }
+                }
+            }
+    });
+
+
+
+    //自定义键盘组件<keyboard>
+    Vue.component('keyboard', {
+        props: ['value'],
+        //模板
+        template: `<div :data-value="value"  @click="getKeyboardValue">{{value}}</div>`,
+        methods:{
+            //点击事件处理函数
+            getKeyboardValue(event){
+                let value=event.target.dataset.value;
+                //通过commit提交mutation
+                this.$store.commit('calculate',value);
+            }
+        }
+    });
+    const demo = new Vue({
+        el: '#demo',
+        data: {
+            keys: [
+                'clear', '+', '-', '*',
+                '7', '8', '9', '/',
+                '4', '5', '6', '0',
+                '1', '2', '3', '='
+            ]
+        },
+        //将仓库store引入到根组件，并且此根组件的所有子组件都可以使用，无需再引入 ，可以通过this.$store访问
+        store,
+        //计算属性
+        computed: {
+            result() {
+                //通过this.$store获取仓库的数据result
+                return this.$store.state.result;
+            },
+            enter() {
+                return this.$store.state.enter;
+            }
+        },
+    });
+
+</script>
+</html>
